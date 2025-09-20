@@ -6,11 +6,11 @@ export class BlogPostModel {
   id!: string;
   @Field() slug!: string;
   @Field() title!: string;
-  @Field({ nullable: true }) excerpt?: string | null;
+  @Field(() => String, { nullable: true }) excerpt?: string | null;
   @Field() content!: string;
-  @Field({ nullable: true }) coverImage?: string | null;
+  @Field(() => String, { nullable: true }) coverImage?: string | null;
   @Field() published!: boolean;
-  @Field({ nullable: true }) publishedAt?: Date | null;
-  @Field() createdAt!: Date;
-  @Field() updatedAt!: Date;
+  @Field(() => Date, { nullable: true }) publishedAt?: Date | null;
+  @Field(() => Date) createdAt!: Date;
+  @Field(() => Date) updatedAt!: Date;
 }

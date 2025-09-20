@@ -6,10 +6,10 @@ export class ProjectModel {
   id!: string;
   @Field() slug!: string;
   @Field() title!: string;
-  @Field({ nullable: true }) description?: string | null;
-  @Field({ nullable: true }) url?: string | null;
-  @Field({ nullable: true }) repoUrl?: string | null;
-  @Field({ nullable: true }) imageUrl?: string | null;
-  @Field() createdAt!: Date;
-  @Field() updatedAt!: Date;
+  @Field(() => String, { nullable: true }) description?: string | null;
+  @Field(() => String, { nullable: true }) url?: string | null;
+  @Field(() => String, { nullable: true }) repoUrl?: string | null;
+  @Field(() => String, { nullable: true }) imageUrl?: string | null;
+  @Field(() => Date) createdAt!: Date;
+  @Field(() => Date) updatedAt!: Date;
 }

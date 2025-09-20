@@ -9,7 +9,7 @@ export class UserSkill {
   @Field(() => ID)
   skillId!: string; // Composite key part
 
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   note?: string | null;
 
   @Field()

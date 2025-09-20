@@ -11,24 +11,24 @@ export class Education {
   @Field()
   institution!: string;
 
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   degree?: string | null;
 
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   field?: string | null;
 
   @Field()
   startDate!: Date;
 
-  @Field({ nullable: true })
+  @Field(() => Date, { nullable: true })
   endDate?: Date | null;
 
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   location?: string | null;
 
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   gpa?: string | null;
 
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   honors?: string | null;
 }

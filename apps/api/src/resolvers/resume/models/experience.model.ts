@@ -15,16 +15,16 @@ export class Experience {
   @Field()
   role!: string;
 
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   location?: string | null;
 
   @Field()
   startDate!: Date;
 
-  @Field({ nullable: true })
+  @Field(() => Date, { nullable: true })
   endDate?: Date | null;
 
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   summary?: string | null;
 
   @Field(() => [ExperienceHighlight])
