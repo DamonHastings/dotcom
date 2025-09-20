@@ -13,10 +13,12 @@ import { AuthModule } from './auth/auth.module';
 import { PrismaModule } from '../prisma/prisma.module';
 
 import { HealthModule } from './health/health.module';
+import { ContactModule } from './contact/contact.module';
 
 @Module({
   imports: [
-    HealthModule,
+  HealthModule,
+  ContactModule,
     AuthModule,
     PrismaModule,
     GraphQLModule.forRoot<ApolloDriverConfig>({
