@@ -7,7 +7,7 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "noEmit": false,
-    "types": ["node"],
+  "types": ["node", "jest"],
     "sourceMap": true
   },
   "include": ["src/**/*.ts"],
