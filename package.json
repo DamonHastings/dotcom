@@ -17,7 +17,9 @@
     "lint": "eslint . --ext .ts,.tsx --max-warnings=0",
     "format": "prettier --write .",
     "typecheck": "tsc -b",
-    "test": "jest --passWithNoTests"
+    "test": "jest --passWithNoTests",
+    "changelog:generate": "ts-node scripts/generate-changelog.ts",
+    "changelog:check": "node scripts/check-changelog.js"
   },
   "devDependencies": {
     "@types/jest": "^29.5.12",
