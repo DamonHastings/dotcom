@@ -1,9 +1,11 @@
-import { Args, ID, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Args, ID, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { PrismaService } from '../../prisma/prisma.service';
 import { UseGuards, NotFoundException, BadRequestException } from '@nestjs/common';
 import { GqlAuthGuard } from '../../modules/auth/gql-auth.guard';
 import { CreateProjectInput, UpdateProjectInput } from './dto/project.input';
 import { CreateBlogPostInput, UpdateBlogPostInput } from './dto/blog-post.input';
+import { ProjectModel } from './models/project.model';
+import { BlogPostModel } from './models/blog-post.model';
 
 @Resolver()
 export class ContentResolver {
@@ -12,8 +14,28 @@ export class ContentResolver {
   // --- Project Queries ---
   @Query(() => [String], { name: 'projectSlugs' })
   async projectSlugs(): Promise<string[]> {
-    const projects = await this.prisma.project.findMany({ select: { slug: true }, orderBy: { createdAt: 'desc' } });
-  return projects.map((p: { slug: string }) => p.slug);
+    const projects = await this.prisma.project.findMany({
+      select: { slug: true },
+      orderBy: { createdAt: 'desc' },
+    });
+    return projects.map((p: { slug: string }) => p.slug);
+  }
+
+  @Query(() => [ProjectModel], { name: 'projects' })
+  async projects(
+    @Args('take', { type: () => Int, nullable: true }) take = 50,
+    @Args('skip', { type: () => Int, nullable: true }) skip = 0,
+  ): Promise<ProjectModel[]> {
+    return this.prisma.project.findMany({
+      skip,
+      take,
+      orderBy: { createdAt: 'desc' },
+    }) as any;
+  }
+
+  @Query(() => ProjectModel, { name: 'project', nullable: true })
+  async project(@Args('slug') slug: string): Promise<ProjectModel | null> {
+    return (await this.prisma.project.findUnique({ where: { slug } })) as any;
   }
 
   // --- Project Mutations ---
@@ -65,6 +87,30 @@ export class ContentResolver {
   }
 
   // --- BlogPost Mutations ---
+  @Query(() => [BlogPostModel], { name: 'blogPosts' })
+  async blogPosts(
+    @Args('take', { type: () => Int, nullable: true }) take = 50,
+    @Args('skip', { type: () => Int, nullable: true }) skip = 0,
+    @Args('includeUnpublished', { type: () => Boolean, nullable: true }) includeUnpublished = false,
+  ): Promise<BlogPostModel[]> {
+    return this.prisma.blogPost.findMany({
+      where: includeUnpublished ? {} : { published: true },
+      skip,
+      take,
+      orderBy: { publishedAt: 'desc' },
+    }) as any;
+  }
+
+  @Query(() => BlogPostModel, { name: 'blogPost', nullable: true })
+  async blogPost(
+    @Args('slug') slug: string,
+    @Args('includeUnpublished', { type: () => Boolean, nullable: true }) includeUnpublished = false,
+  ): Promise<BlogPostModel | null> {
+    const post = await this.prisma.blogPost.findUnique({ where: { slug } });
+    if (!post) return null;
+    if (!includeUnpublished && !post.published) return null;
+    return post as any;
+  }
   @Mutation(() => String, { name: 'createBlogPost' })
   @UseGuards(GqlAuthGuard)
   async createBlogPost(@Args('input') input: CreateBlogPostInput): Promise<string> {
@@ -99,7 +145,12 @@ export class ContentResolver {
         content: input.content ?? undefined,
         coverImage: input.coverImage ?? undefined,
         published: input.published ?? existing.published,
-        publishedAt: input.published === undefined ? existing.publishedAt : (input.published ? (existing.publishedAt ?? new Date()) : null),
+        publishedAt:
+          input.published === undefined
+            ? existing.publishedAt
+            : input.published
+              ? (existing.publishedAt ?? new Date())
+              : null,
       },
     });
     return true;

@@ -27,7 +27,27 @@ export const RESUME_QUERY = `#graphql
 `;
 
 export interface ResumeData {
-  skills: { order: number; note?: string | null; skill: { name: string; category: string; proficiency: string } }[];
-  experiences: { company: string; role: string; location?: string | null; startDate: string; endDate?: string | null; summary?: string | null; highlights: { order: number; text: string }[] }[];
-  education: { institution: string; degree?: string | null; field?: string | null; startDate: string; endDate?: string | null; location?: string | null; honors?: string | null }[];
+  skills: {
+    order: number;
+    note?: string | null;
+    skill: { name: string; category: string; proficiency: string };
+  }[];
+  experiences: {
+    company: string;
+    role: string;
+    location?: string | null;
+    startDate: string;
+    endDate?: string | null;
+    summary?: string | null;
+    highlights: { order: number; text: string }[];
+  }[];
+  education: {
+    institution: string;
+    degree?: string | null;
+    field?: string | null;
+    startDate: string;
+    endDate?: string | null;
+    location?: string | null;
+    honors?: string | null;
+  }[];
 }

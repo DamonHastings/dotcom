@@ -14,7 +14,11 @@ function getCurrentLog() {
 function generateTemp() {
   const script = join(root, 'scripts', 'generate-changelog.ts');
   // run ts-node inline; if not installed globally it uses workspace dep
-  return execSync(`npx ts-node ${script}`, { cwd: root, env: process.env, stdio: 'pipe' }).toString();
+  return execSync(`npx ts-node ${script}`, {
+    cwd: root,
+    env: process.env,
+    stdio: 'pipe',
+  }).toString();
 }
 
 try {

@@ -3,7 +3,11 @@ import { Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 
 import { HelloResolver } from '../resolvers/hello.resolver';
-import { UserSkillResolver, ExperienceResolver, EducationResolver } from '../resolvers/resume/resume.resolver';
+import {
+  UserSkillResolver,
+  ExperienceResolver,
+  EducationResolver,
+} from '../resolvers/resume/resume.resolver';
 import { ContentResolver } from '../resolvers/content/content.resolver';
 import { AuthModule } from './auth/auth.module';
 import { PrismaModule } from '../prisma/prisma.module';
@@ -22,9 +26,15 @@ import { HealthModule } from './health/health.module';
       subscriptions: {
         'graphql-ws': true,
       },
-  context: ({ req }: { req: Request }) => ({ req }),
+      context: ({ req }: { req: Request }) => ({ req }),
     }),
   ],
-  providers: [HelloResolver, UserSkillResolver, ExperienceResolver, EducationResolver, ContentResolver],
+  providers: [
+    HelloResolver,
+    UserSkillResolver,
+    ExperienceResolver,
+    EducationResolver,
+    ContentResolver,
+  ],
 })
 export class AppModule {}
