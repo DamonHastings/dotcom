@@ -4,6 +4,7 @@ import { GraphQLModule } from '@nestjs/graphql';
 
 import { HelloResolver } from '../resolvers/hello.resolver';
 import { UserSkillResolver, ExperienceResolver, EducationResolver } from '../resolvers/resume/resume.resolver';
+import { AuthModule } from './auth/auth.module';
 import { PrismaModule } from '../prisma/prisma.module';
 
 import { HealthModule } from './health/health.module';
@@ -11,6 +12,7 @@ import { HealthModule } from './health/health.module';
 @Module({
   imports: [
     HealthModule,
+    AuthModule,
     PrismaModule,
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
@@ -19,6 +21,7 @@ import { HealthModule } from './health/health.module';
       subscriptions: {
         'graphql-ws': true,
       },
+  context: ({ req }: { req: Request }) => ({ req }),
     }),
   ],
   providers: [HelloResolver, UserSkillResolver, ExperienceResolver, EducationResolver],
