@@ -3,6 +3,7 @@ import { Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 
 import { HelloResolver } from '../resolvers/hello.resolver';
+import { UserSkillResolver, ExperienceResolver, EducationResolver } from '../resolvers/resume/resume.resolver';
 import { PrismaModule } from '../prisma/prisma.module';
 
 import { HealthModule } from './health/health.module';
@@ -20,6 +21,6 @@ import { HealthModule } from './health/health.module';
       },
     }),
   ],
-  providers: [HelloResolver],
+  providers: [HelloResolver, UserSkillResolver, ExperienceResolver, EducationResolver],
 })
 export class AppModule {}
