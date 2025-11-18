@@ -7,7 +7,10 @@ import { BadRequestException } from '@nestjs/common';
 
 @Resolver()
 export class ContactResolver {
-  constructor(private prisma: PrismaService, private contactService: ContactService) {}
+  constructor(
+    private prisma: PrismaService,
+    private contactService: ContactService,
+  ) {}
 
   @Mutation(() => LeadModel, { name: 'submitLead' })
   async submitLead(@Args('input') input: SubmitLeadInput): Promise<LeadModel> {

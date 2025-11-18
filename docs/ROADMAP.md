@@ -3,9 +3,11 @@
 This document is the canonical roadmap for the project. It lists epics, tickets, and a suggested sprint plan.
 
 Overview
+
 - Epics: MVP (lead capture & booking), Admin & Content, Quality & CI, Production & Security, Polish & Growth
 
 Tickets (summary)
+
 - RO-1 Monorepo scaffold — Done
 - RO-2 Infra: Docker Compose — Done
 - RO-3 Prisma schema & migrations — Done
@@ -32,15 +34,18 @@ Tickets (summary)
 - RO-24 Optional: custom Google Calendar scheduler — Todo
 
 Suggested Sprints
+
 - Sprint 1 (2 weeks): RO-9, RO-10, RO-11, RO-12, RO-13
 - Sprint 2 (2 weeks): RO-14, RO-15, RO-16
 - Sprint 3 (2 weeks): RO-17, RO-18, RO-19
 - Sprint 4 (1–2 weeks): RO-20, RO-21, RO-22
 
 CSV Import
+
 - If you want a Jira import, I can generate a CSV mapping the above tickets to Summary, Description, Issue Type, Labels, and Priority. Ask me for a CSV export.
 
 Next steps
+
 - I can create GitHub issues from these tickets, export CSV for Jira, or start implementing the top-priority ticket (RO-9).
 
 Generated: 2025-11-17

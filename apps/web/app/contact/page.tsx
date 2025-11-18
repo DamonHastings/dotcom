@@ -1,4 +1,4 @@
-"use client";
+'use client';
 import React, { useState } from 'react';
 
 import { gqlRequest } from '../../lib/graphql-client';
@@ -16,7 +16,9 @@ export default function ContactPage() {
     setError(null);
     const mutation = `mutation SubmitLead($input: SubmitLeadInput!) { submitLead(input: $input) { id email name createdAt } }`;
     try {
-      const data = await gqlRequest<{ submitLead: { id: string } }>(mutation, { input: { name, email, message } });
+      const data = await gqlRequest<{ submitLead: { id: string } }>(mutation, {
+        input: { name, email, message },
+      });
       if (data?.submitLead?.id) {
         setStatus('success');
         setName('');
@@ -82,7 +84,9 @@ export default function ContactPage() {
           </button>
         </div>
 
-        {status === 'success' && <p className="text-green-600">Thanks — we received your message.</p>}
+        {status === 'success' && (
+          <p className="text-green-600">Thanks — we received your message.</p>
+        )}
         {status === 'error' && <p className="text-red-600">Error: {error}</p>}
       </form>
     </main>
