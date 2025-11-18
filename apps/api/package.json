@@ -12,7 +12,8 @@
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
     "prisma:studio": "prisma studio",
-    "db:seed": "ts-node prisma/seed.ts"
+    "db:seed": "ts-node prisma/seed.ts",
+    "migration:check": "prisma migrate status --schema=./prisma/schema.prisma"
   },
   "dependencies": {
     "@nestjs/apollo": "^12.0.0",
@@ -31,6 +32,9 @@
     "reflect-metadata": "^0.1.13",
     "rimraf": "^5.0.5",
     "rxjs": "^7.8.1"
+  },
+  "optionalDependencies": {
+    "@sendgrid/mail": "^7.11.0"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",

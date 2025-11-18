@@ -137,6 +137,18 @@ async function main() {
       honors: 'Magna Cum Laude',
     },
   });
+
+  // Sample lead
+  await prisma.lead.upsert({
+    where: { email: 'lead@example.com' },
+    update: {},
+    create: {
+      name: 'Example Lead',
+      email: 'lead@example.com',
+      message: 'This is a seeded lead for local development.',
+      source: 'seed',
+    },
+  });
 }
 
 main()

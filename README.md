@@ -60,18 +60,31 @@ API Health: http://localhost:${API_PORT:-4000}/health
 GraphQL Playground: http://localhost:${API_PORT:-4000}/graphql
 ```
 
+## Documentation
+
+More detailed developer and operational documentation is available in the `docs/` folder. Key guides:
+
+- `docs/RUNNING_LOCALLY.md` — quickstart for local development (Docker, env, Prisma, seeding).
+- `docs/ARCHITECTURE.md` — high-level architecture, diagrams, data flow, and component responsibilities.
+- `docs/API_REFERENCE.md` — GraphQL entry points, sample queries/mutations, and auth notes.
+- `docs/CONTRIBUTING.md` — how to contribute, run tests, lint, and create PRs.
+- `docs/DEPLOYMENT.md` — build and deployment checklist, production envs, and migration steps.
+
+If you prefer a docs site later, these Markdown files can be published with MkDocs or Docusaurus.
+
 ## Scripts (Root)
 
-| Script              | Purpose                             |
-| ------------------- | ----------------------------------- |
-| `npm run dev`       | Run web & api in parallel           |
-| `npm run dev:web`   | Dev server for Next.js app          |
-| `npm run dev:api`   | Dev server for NestJS API           |
-| `npm run build`     | Build all workspaces                |
-| `npm test`          | Run all Jest tests                  |
-| `npm run lint`      | ESLint across repo                  |
-| `npm run format`    | Prettier write                      |
-| `npm run typecheck` | TypeScript project references check |
+| Script                    | Purpose                                 |
+| ------------------------- | --------------------------------------- |
+| `npm run dev`             | Run web & api in parallel               |
+| `npm run dev:web`         | Dev server for Next.js app              |
+| `npm run dev:api`         | Dev server for NestJS API               |
+| `npm run build`           | Build all workspaces                    |
+| `npm run migration:check` | Verify Prisma schema applied (no drift) |
+| `npm test`                | Run all Jest tests                      |
+| `npm run lint`            | ESLint across repo                      |
+| `npm run format`          | Prettier write                          |
+| `npm run typecheck`       | TypeScript project references check     |
 
 ## Environment Variables
 
@@ -182,6 +195,14 @@ Open Prisma Studio:
 ```bash
 npm -w @apps/api run prisma:studio
 ```
+
+Check for migration drift (ensures all schema changes are represented by committed migrations):
+
+```bash
+npm run migration:check
+```
+
+If this exits with a non-zero code in CI, create a new migration with `prisma migrate dev` and commit it.
 
 ### Seeding
 

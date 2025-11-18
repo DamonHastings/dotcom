@@ -11,13 +11,14 @@
     "dev": "npm-run-all -p dev:web dev:api",
     "dev:web": "npm --workspace @apps/web run dev",
     "dev:api": "npm --workspace @apps/api run start:dev",
-    "build": "npm-run-all build:*",
-    "build:web": "npm --workspace @apps/web run build",
-    "build:api": "npm --workspace @apps/api run build",
-    "lint": "eslint . --ext .ts,.tsx --max-warnings=0",
+    "build": "turbo run build",
+    "build:web": "turbo run build --filter=@apps/web",
+    "build:api": "turbo run build --filter=@apps/api",
+    "lint": "turbo run lint --no-cache && eslint . --ext .ts,.tsx --max-warnings=0",
     "format": "prettier --write .",
     "typecheck": "tsc -b",
-    "test": "jest --passWithNoTests",
+    "test": "turbo run test",
+    "migration:check": "npm --workspace @apps/api run migration:check",
     "changelog:generate": "ts-node scripts/generate-changelog.ts",
     "changelog:check": "node scripts/check-changelog.js"
   },
@@ -38,6 +39,7 @@
     "supertest": "^7.1.4",
     "ts-jest": "^29.1.2",
     "ts-node": "^10.9.2",
+    "turbo": "^2.5.6",
     "typescript": "^5.4.0"
   },
   "dependencies": {

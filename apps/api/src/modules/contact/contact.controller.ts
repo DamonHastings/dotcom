@@ -9,7 +9,9 @@ export class ContactController {
 
   @Post()
   @HttpCode(HttpStatus.OK)
-  async submit(@Body(new ValidationPipe({ whitelist: true, transform: true })) body: ContactRequestDto): Promise<ContactResponseDto> {
+  async submit(
+    @Body(new ValidationPipe({ whitelist: true, transform: true })) body: ContactRequestDto,
+  ): Promise<ContactResponseDto> {
     return this.contact.handle(body);
   }
 }

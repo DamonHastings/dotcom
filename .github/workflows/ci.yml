@@ -29,6 +29,9 @@ jobs:
       - name: Lint
         run: npm run lint
 
+      - name: Migration drift check
+        run: npm run migration:check
+
       - name: Typecheck
         run: npm run typecheck
 

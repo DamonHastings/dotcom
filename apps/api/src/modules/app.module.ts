@@ -9,6 +9,7 @@ import {
   EducationResolver,
 } from '../resolvers/resume/resume.resolver';
 import { ContentResolver } from '../resolvers/content/content.resolver';
+import { ContactResolver } from '../resolvers/contact/contact.resolver';
 import { AuthModule } from './auth/auth.module';
 import { PrismaModule } from '../prisma/prisma.module';
 
@@ -17,8 +18,8 @@ import { ContactModule } from './contact/contact.module';
 
 @Module({
   imports: [
-  HealthModule,
-  ContactModule,
+    HealthModule,
+    ContactModule,
     AuthModule,
     PrismaModule,
     GraphQLModule.forRoot<ApolloDriverConfig>({
@@ -37,6 +38,7 @@ import { ContactModule } from './contact/contact.module';
     ExperienceResolver,
     EducationResolver,
     ContentResolver,
+    ContactResolver,
   ],
 })
 export class AppModule {}

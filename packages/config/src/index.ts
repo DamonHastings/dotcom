@@ -25,11 +25,32 @@ export function loadEnv(rootDir: string = process.cwd()): Env {
   if (!loaded) {
     dotenv.config({ path: path.join(rootDir, '.env') });
     loaded = true;
+    // Provide safe development defaults if running locally and vars missing
+    const isDev = (process.env.NODE_ENV || 'development') !== 'production';
+    if (isDev) {
+      if (!process.env.JWT_SECRET) {
+        // eslint-disable-next-line no-console
+        console.warn('[env] Using generated dev JWT_SECRET. Set one in .env for consistency.');
+        process.env.JWT_SECRET = 'dev_secret_change_me_please_1234567890';
+      }
+      if (!process.env.ADMIN_USERNAME) {
+        // eslint-disable-next-line no-console
+        console.warn('[env] Using default ADMIN_USERNAME=admin');
+        process.env.ADMIN_USERNAME = 'admin';
+      }
+      if (!process.env.ADMIN_PASSWORD) {
+        // eslint-disable-next-line no-console
+        console.warn('[env] Using default ADMIN_PASSWORD=change_me_local_only');
+        process.env.ADMIN_PASSWORD = 'change_me_local_only';
+      }
+    }
   }
   if (!parsed) {
     const result = schema.safeParse(process.env);
     if (!result.success) {
-  const formatted = result.error.issues.map(issue => `${issue.path.join('.')}: ${issue.message}`).join('\n');
+      const formatted = result.error.issues
+        .map((issue) => `${issue.path.join('.')}: ${issue.message}`)
+        .join('\n');
       throw new Error('Environment validation failed:\n' + formatted);
     }
     parsed = result.data;
@@ -45,6 +66,7 @@ export function getEnv(): Env {
 export function required(name: keyof Env): string | number {
   const env = getEnv();
   const val = env[name];
-  if (val === undefined || val === null || val === '') throw new Error(`Missing required env var: ${name as string}`);
+  if (val === undefined || val === null || val === '')
+    throw new Error(`Missing required env var: ${name as string}`);
   return val as any;
 }

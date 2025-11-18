@@ -3,7 +3,9 @@ import { Test } from '@nestjs/testing';
 import { AppModule } from '../../src/modules/app.module';
 import request from 'supertest';
 
-export interface AuthTokens { token: string }
+export interface AuthTokens {
+  token: string;
+}
 
 export class AppTestFactory {
   app!: INestApplication;
@@ -15,13 +17,15 @@ export class AppTestFactory {
     return this;
   }
 
-  async close() { await this.app.close(); }
-
-  gql(query: string, variables?: Record<string, unknown>) {
-    return request(this.app.getHttpServer())
-      .post('/graphql')
-      .send({ query, variables });
+  async close() {
+    await this.app.close();
   }
 
-  http() { return request(this.app.getHttpServer()); }
+  gql(query: string, variables?: Record<string, unknown>) {
+    return request(this.app.getHttpServer()).post('/graphql').send({ query, variables });
+  }
+
+  http() {
+    return request(this.app.getHttpServer());
+  }
 }

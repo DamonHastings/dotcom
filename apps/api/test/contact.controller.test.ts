@@ -2,8 +2,12 @@ import { AppTestFactory } from './utils/app-test.factory';
 
 describe('ContactController (e2e)', () => {
   const factory = new AppTestFactory();
-  beforeAll(async () => { await factory.init(); });
-  afterAll(async () => { await factory.close(); });
+  beforeAll(async () => {
+    await factory.init();
+  });
+  afterAll(async () => {
+    await factory.close();
+  });
 
   it('rejects invalid body', async () => {
     const res = await factory.http().post('/contact').send({});
@@ -15,7 +19,7 @@ describe('ContactController (e2e)', () => {
       name: 'Test User',
       email: 'test@example.com',
       subject: 'Hi',
-      message: 'This is a sufficiently long message body for validation.'
+      message: 'This is a sufficiently long message body for validation.',
     });
     expect(res.status).toBe(200);
     expect(res.body.success).toBe(true);

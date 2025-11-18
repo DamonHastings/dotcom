@@ -5,8 +5,12 @@ query Projects { projects { slug title } }`;
 
 describe('ContentResolver (e2e)', () => {
   const factory = new AppTestFactory();
-  beforeAll(async () => { await factory.init(); });
-  afterAll(async () => { await factory.close(); });
+  beforeAll(async () => {
+    await factory.init();
+  });
+  afterAll(async () => {
+    await factory.close();
+  });
 
   it('returns project list', async () => {
     const res = await factory.gql(PROJECTS_QUERY);
