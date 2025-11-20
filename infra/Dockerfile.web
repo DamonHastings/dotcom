@@ -3,8 +3,10 @@ FROM node:20-bullseye-slim AS deps
 WORKDIR /app
 COPY package.json package-lock.json* ./
 COPY apps/web/package.json apps/web/
-# Install only production deps for workspace (deterministic)
-RUN npm ci --omit=dev --workspaces=false && npm ci --workspace @apps/web --omit=dev
+# Install only production deps for all workspaces (deterministic)
+# Run `npm ci` at the repo root so workspace packages (e.g. `packages/ui`) are
+# installed and symlinked into `node_modules` for the build step.
+RUN npm ci --omit=dev
 
 FROM node:20-bullseye-slim AS builder
 WORKDIR /app
