@@ -1,6 +1,7 @@
-import { gqlRequest } from '../../lib/graphql-client';
-import AdminLeadsClient from '../../src/components/AdminLeadsClient';
 import React from 'react';
+
+import AdminLeadsClient from '../../src/components/AdminLeadsClient';
+import { gqlRequest } from '../../lib/graphql-client';
 
 type Booking = {
   id: string;
