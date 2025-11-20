@@ -16,11 +16,13 @@ import { PrismaModule } from '../prisma/prisma.module';
 
 import { HealthModule } from './health/health.module';
 import { ContactModule } from './contact/contact.module';
+import { WebhookModule } from './webhook/webhook.module';
 
 @Module({
   imports: [
     HealthModule,
     ContactModule,
+    WebhookModule,
     AuthModule,
     PrismaModule,
     GraphQLModule.forRoot<ApolloDriverConfig>({
