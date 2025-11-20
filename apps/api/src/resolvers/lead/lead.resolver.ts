@@ -1,6 +1,5 @@
 import { Query, Resolver } from '@nestjs/graphql';
 import { PrismaService } from '../../prisma/prisma.service';
-import { Lead } from '@prisma/client';
 import { UseGuards } from '@nestjs/common';
 import { AdminGuard } from '../../modules/auth/admin.guard';
 
@@ -11,7 +10,7 @@ export class LeadResolver {
   // Admin-only: fetch leads with recent bookings
   @Query(() => [Object], { name: 'adminLeads' })
   @UseGuards(AdminGuard)
-  async adminLeads(): Promise<Lead[]> {
+  async adminLeads(): Promise<any[]> {
     const leads = await this.prisma.lead.findMany({
       include: { bookings: true },
       orderBy: { createdAt: 'desc' },
