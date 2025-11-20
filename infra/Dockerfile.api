@@ -1,13 +1,15 @@
 # API (NestJS) production image
-FROM node:20-alpine AS builder
+FROM node:20-bullseye-slim AS builder
 WORKDIR /app
 COPY package.json package-lock.json* ./
 COPY apps/api/package.json apps/api/
-RUN npm install --omit=dev --workspaces=false && npm install --workspace @apps/api --omit=dev
+RUN npm ci --omit=dev --workspaces=false && npm ci --workspace @apps/api --omit=dev
 COPY . .
-RUN npm install && npm run build:api
+# Install full deps (including dev) to run the root build script if needed,
+# then build only the API package using its local `build` script to avoid depending on turbo.
+RUN npm ci && npm --workspace @apps/api run build
 
-FROM node:20-alpine AS runner
+FROM node:20-bullseye-slim AS runner
 WORKDIR /app
 ENV NODE_ENV=production
 COPY --from=builder /app/apps/api/dist ./apps/api/dist
