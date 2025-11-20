@@ -1,5 +1,6 @@
-import { Body, Controller, Headers, HttpCode, HttpStatus, Post } from '@nestjs/common';
+import { Body, Controller, Headers, HttpCode, HttpStatus, Post, UnauthorizedException } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
+import * as crypto from 'crypto';
 
 @Controller('webhook')
 export class WebhookController {
@@ -9,8 +10,34 @@ export class WebhookController {
   @Post('calendly')
   @HttpCode(HttpStatus.NO_CONTENT)
   async handleCalendly(@Body() body: any, @Headers('calendly-hook-signature') signature: string | undefined) {
-    // NOTE: Validate signature here if you set CALENDLY_WEBHOOK_SECRET.
-    // For now, we accept the request and process minimal fields.
+    // Validate signature when CALENDLY_WEBHOOK_SECRET is set
+    const secret = process.env.CALENDLY_WEBHOOK_SECRET;
+    if (secret) {
+      if (!signature) {
+        throw new UnauthorizedException('Missing Calendly signature');
+      }
+
+      // Signature may be provided as raw hex/base64 or with prefixes like 'sha256='
+      const incoming = signature.split('=')?.pop() || signature;
+
+      // Use the raw body string for verification. Re-stringify to match how Calendly signs payloads.
+      const payloadString = typeof body === 'string' ? body : JSON.stringify(body);
+      const expectedHmac = crypto.createHmac('sha256', secret).update(payloadString).digest();
+
+      let incomingBuf: Buffer;
+      try {
+        // try hex
+        incomingBuf = Buffer.from(incoming, 'hex');
+        if (incomingBuf.length === 0) throw new Error('empty hex');
+      } catch (e) {
+        // fallback to base64
+        incomingBuf = Buffer.from(incoming, 'base64');
+      }
+
+      // Constant-time compare
+      const ok = incomingBuf.length === expectedHmac.length && crypto.timingSafeEqual(incomingBuf, expectedHmac);
+      if (!ok) throw new UnauthorizedException('Invalid Calendly webhook signature');
+    }
     try {
       const event = body.event || body;
       // Calendly payloads differ depending on event subscription; capture relevant fields safely
