@@ -19,6 +19,19 @@ jobs:
         id: lc_owner
         run: echo "owner=$(echo '${{ github.repository_owner }}' | tr '[:upper:]' '[:lower:]')" >> $GITHUB_OUTPUT
 
+      - name: Set short git SHA
+        id: sha
+        run: echo "sha=$(git rev-parse --short=7 HEAD)" >> $GITHUB_OUTPUT
+
+      - name: Select GHCR token
+        id: ghcr_token
+        run: |
+          if [ -n "${{ secrets.GHCR_PAT }}" ]; then
+            echo "token=${{ secrets.GHCR_PAT }}" >> $GITHUB_OUTPUT
+          else
+            echo "token=${{ github.token }}" >> $GITHUB_OUTPUT
+          fi
+
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
 
@@ -30,22 +43,30 @@ jobs:
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          password: ${{ steps.ghcr_token.outputs.token }}
 
       - name: Build and push API image
         uses: docker/build-push-action@v4
         with:
           context: .
           file: infra/Dockerfile.api
+          platforms: linux/amd64,linux/arm64
           push: true
           tags: |
-            ghcr.io/${{ steps.lc_owner.outputs.owner }}/dotcom-api:${{ github.sha }}
+            ghcr.io/${{ steps.lc_owner.outputs.owner }}/dotcom-api:${{ steps.sha.outputs.sha }}
+            ghcr.io/${{ steps.lc_owner.outputs.owner }}/dotcom-api:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
       - name: Build and push Web image
         uses: docker/build-push-action@v4
         with:
           context: .
           file: infra/Dockerfile.web
+          platforms: linux/amd64,linux/arm64
           push: true
           tags: |
-            ghcr.io/${{ steps.lc_owner.outputs.owner }}/dotcom-web:${{ github.sha }}
+            ghcr.io/${{ steps.lc_owner.outputs.owner }}/dotcom-web:${{ steps.sha.outputs.sha }}
+            ghcr.io/${{ steps.lc_owner.outputs.owner }}/dotcom-web:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
