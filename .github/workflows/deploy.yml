@@ -35,7 +35,7 @@ jobs:
           file: infra/Dockerfile.api
           push: true
           tags: |
-            ghcr.io/${{ github.repository_owner }}/dotcom-api:${{ github.sha }}
+            ghcr.io/${{ toLower(github.repository_owner) }}/dotcom-api:${{ github.sha }}
 
       - name: Build and push Web image
         uses: docker/build-push-action@v4
@@ -44,4 +44,4 @@ jobs:
           file: infra/Dockerfile.web
           push: true
           tags: |
-            ghcr.io/${{ github.repository_owner }}/dotcom-web:${{ github.sha }}
+            ghcr.io/${{ toLower(github.repository_owner) }}/dotcom-web:${{ github.sha }}
