@@ -3,6 +3,8 @@ import { PrismaService } from '../../prisma/prisma.service';
 import { CreateBookingInput } from './dto/create-booking.input';
 import { BookingModel } from './models/booking.model';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
+import { UseGuards } from '@nestjs/common';
+import { AdminGuard } from '../../modules/auth/admin.guard';
 
 @Resolver()
 export class BookingResolver {
@@ -41,6 +43,7 @@ export class BookingResolver {
   }
 
   @Mutation(() => BookingModel, { name: 'confirmBooking' })
+  @UseGuards(AdminGuard)
   async confirmBooking(@Args('id') id: string): Promise<BookingModel> {
     const existing = await this.prisma.booking.findUnique({ where: { id } });
     if (!existing) throw new NotFoundException('Booking not found');
@@ -53,6 +56,7 @@ export class BookingResolver {
   }
 
   @Mutation(() => BookingModel, { name: 'cancelBooking' })
+  @UseGuards(AdminGuard)
   async cancelBooking(@Args('id') id: string): Promise<BookingModel> {
     const existing = await this.prisma.booking.findUnique({ where: { id } });
     if (!existing) throw new NotFoundException('Booking not found');
