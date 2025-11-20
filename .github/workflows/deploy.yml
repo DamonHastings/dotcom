@@ -15,6 +15,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Set lowercase owner
+        id: lc_owner
+        run: echo "owner=$(echo '${{ github.repository_owner }}' | tr '[:upper:]' '[:lower:]')" >> $GITHUB_OUTPUT
+
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
 
@@ -35,7 +39,7 @@ jobs:
           file: infra/Dockerfile.api
           push: true
           tags: |
-            ghcr.io/${{ toLower(github.repository_owner) }}/dotcom-api:${{ github.sha }}
+            ghcr.io/${{ steps.lc_owner.outputs.owner }}/dotcom-api:${{ github.sha }}
 
       - name: Build and push Web image
         uses: docker/build-push-action@v4
@@ -44,4 +48,4 @@ jobs:
           file: infra/Dockerfile.web
           push: true
           tags: |
-            ghcr.io/${{ toLower(github.repository_owner) }}/dotcom-web:${{ github.sha }}
+            ghcr.io/${{ steps.lc_owner.outputs.owner }}/dotcom-web:${{ github.sha }}
