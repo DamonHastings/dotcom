@@ -1,87 +1,44 @@
 'use client';
-import React, { useState } from 'react';
-
-import { gqlRequest } from '../../lib/graphql-client';
+import React from 'react';
+import { Button, Input, Textarea } from 'packages/ui';
+import { useContactForm } from '../../lib/useContactForm';
 
 export default function ContactPage() {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [message, setMessage] = useState('');
-  const [status, setStatus] = useState<null | 'idle' | 'sending' | 'success' | 'error'>(null);
-  const [error, setError] = useState<string | null>(null);
-
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    setStatus('sending');
-    setError(null);
-    const mutation = `mutation SubmitLead($input: SubmitLeadInput!) { submitLead(input: $input) { id email name createdAt } }`;
-    try {
-      const data = await gqlRequest<{ submitLead: { id: string } }>(mutation, {
-        input: { name, email, message },
-      });
-      if (data?.submitLead?.id) {
-        setStatus('success');
-        setName('');
-        setEmail('');
-        setMessage('');
-      } else {
-        setStatus('error');
-        setError('Unexpected response from server');
-      }
-    } catch (err: unknown) {
-      setStatus('error');
-      const msg = err instanceof Error ? err.message : String(err);
-      setError(msg);
-    }
-  }
+  const { name, setName, email, setEmail, message, setMessage, status, error, errors, submit } =
+    useContactForm();
 
   return (
     <main className="max-w-xl mx-auto py-12 px-4">
       <h1 className="text-3xl font-semibold mb-4">Contact</h1>
       <p className="mb-6">Send us a message — we will get back to you.</p>
 
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          void submit();
+        }}
+        className="space-y-4"
+      >
         <div>
           <label className="block text-sm font-medium">Name</label>
-          <input
-            className="mt-1 block w-full border rounded px-3 py-2"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="Your name"
-          />
+          <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="Your name" />
+          {errors.name && <p className="text-red-600 text-sm mt-1">{errors.name}</p>}
         </div>
 
         <div>
           <label className="block text-sm font-medium">Email</label>
-          <input
-            required
-            type="email"
-            className="mt-1 block w-full border rounded px-3 py-2"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="you@example.com"
-          />
+          <Input value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@example.com" />
+          {errors.email && <p className="text-red-600 text-sm mt-1">{errors.email}</p>}
         </div>
 
         <div>
           <label className="block text-sm font-medium">Message</label>
-          <textarea
-            className="mt-1 block w-full border rounded px-3 py-2"
-            rows={6}
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            placeholder="How can we help you?"
-          />
+          <Textarea value={message} onChange={(e) => setMessage(e.target.value)} placeholder="How can we help?" />
+          {errors.message && <p className="text-red-600 text-sm mt-1">{errors.message}</p>}
         </div>
 
         <div>
-          <button
-            type="submit"
-            className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded"
-            disabled={status === 'sending'}
-          >
-            {status === 'sending' ? 'Sending…' : 'Send message'}
-          </button>
+          <Button onClick={submit} disabled={status === 'sending'}>Send</Button>
         </div>
 
         {status === 'success' && (

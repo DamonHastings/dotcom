@@ -10,6 +10,7 @@ import {
 } from '../resolvers/resume/resume.resolver';
 import { ContentResolver } from '../resolvers/content/content.resolver';
 import { ContactResolver } from '../resolvers/contact/contact.resolver';
+import { BookingResolver } from '../resolvers/booking/booking.resolver';
 import { AuthModule } from './auth/auth.module';
 import { PrismaModule } from '../prisma/prisma.module';
 
@@ -39,6 +40,7 @@ import { ContactModule } from './contact/contact.module';
     EducationResolver,
     ContentResolver,
     ContactResolver,
+    BookingResolver,
   ],
 })
 export class AppModule {}

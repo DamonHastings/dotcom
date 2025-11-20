@@ -139,16 +139,38 @@ async function main() {
   });
 
   // Sample lead
+  // Sample lead (use id for upsert because email is not unique)
   await prisma.lead.upsert({
-    where: { email: 'lead@example.com' },
+    where: { id: 'lead-seed-1' },
     update: {},
     create: {
+      id: 'lead-seed-1',
       name: 'Example Lead',
       email: 'lead@example.com',
       message: 'This is a seeded lead for local development.',
       source: 'seed',
     },
   });
+
+  // Sample booking (for local development)
+  const seededLead = await prisma.lead.findUnique({ where: { id: 'lead-seed-1' } });
+  if (seededLead) {
+    await prisma.booking.upsert({
+      where: { id: 'booking-seed-1' },
+      update: {},
+      create: {
+        id: 'booking-seed-1',
+        leadId: seededLead.id,
+        userId: damon.id,
+        startAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+        endAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000 + 30 * 60 * 1000),
+        timezone: 'UTC',
+        provider: 'calendly',
+        providerEventId: 'seed-event-1',
+        status: 'PENDING',
+      },
+    });
+  }
 }
 
 main()
