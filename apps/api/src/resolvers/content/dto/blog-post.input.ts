@@ -6,7 +6,6 @@ export class CreateBlogPostInput {
   @Field() title!: string;
   @Field({ nullable: true }) excerpt?: string;
   @Field() content!: string;
-  @Field({ nullable: true }) coverImage?: string;
   @Field({ nullable: true }) published?: boolean;
 }
 

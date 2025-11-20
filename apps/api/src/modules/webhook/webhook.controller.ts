@@ -1,6 +1,7 @@
-import { Body, Controller, Headers, HttpCode, HttpStatus, Post, UnauthorizedException } from '@nestjs/common';
+import { Body, Controller, Headers, HttpCode, HttpStatus, Post, UnauthorizedException, Req } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import * as crypto from 'crypto';
+import { Request } from 'express';
 
 @Controller('webhook')
 export class WebhookController {
@@ -9,7 +10,7 @@ export class WebhookController {
   // Calendly will POST event payloads here. We support a simple upsert for 'invitee.created' or 'event.canceled' etc.
   @Post('calendly')
   @HttpCode(HttpStatus.NO_CONTENT)
-  async handleCalendly(@Body() body: any, @Headers('calendly-hook-signature') signature: string | undefined) {
+  async handleCalendly(@Req() req: Request, @Body() body: any, @Headers('calendly-hook-signature') signature: string | undefined) {
     // Validate signature when CALENDLY_WEBHOOK_SECRET is set
     const secret = process.env.CALENDLY_WEBHOOK_SECRET;
     if (secret) {
@@ -20,8 +21,8 @@ export class WebhookController {
       // Signature may be provided as raw hex/base64 or with prefixes like 'sha256='
       const incoming = signature.split('=')?.pop() || signature;
 
-      // Use the raw body string for verification. Re-stringify to match how Calendly signs payloads.
-      const payloadString = typeof body === 'string' ? body : JSON.stringify(body);
+      // Use raw body captured by middleware if available, otherwise fallback to JSON stringify
+      const payloadString = (req as any).rawBody || (typeof body === 'string' ? body : JSON.stringify(body));
       const expectedHmac = crypto.createHmac('sha256', secret).update(payloadString).digest();
 
       let incomingBuf: Buffer;
@@ -83,10 +84,10 @@ export class WebhookController {
         }
       }
 
-      // Find existing booking by providerEventId (providerEventId is indexed, but not unique). If found, update; otherwise create.
-      const existing = await this.prisma.booking.findFirst({ where: { providerEventId } });
-      if (existing) {
-        await this.prisma.booking.update({ where: { id: existing.id }, data: { ...bookingData, status: 'CONFIRMED' } });
+      // If providerEventId is not a unique field in the schema, do a find-then-update/create
+      const existingBooking = await this.prisma.booking.findFirst({ where: { providerEventId } });
+      if (existingBooking) {
+        await this.prisma.booking.update({ where: { id: existingBooking.id }, data: { ...bookingData, status: 'CONFIRMED' } });
       } else {
         await this.prisma.booking.create({ data: { ...bookingData, status: 'CONFIRMED' } });
       }

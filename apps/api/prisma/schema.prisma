@@ -39,19 +39,19 @@ model Tag {
 }
 
 model BlogPost {
-  id          String        @id @default(cuid())
-  slug        String        @unique
-  title       String
-  excerpt     String?
-  content     String // Markdown/MDX content
-  coverImage  String?
-  published   Boolean       @default(false)
-  publishedAt DateTime?
-  authorId    String
-  author      User          @relation(fields: [authorId], references: [id])
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
-  tags        BlogPostTag[]
+  id              String        @id @default(cuid())
+  slug            String        @unique
+  title           String
+  excerpt         String?
+  content         String // Markdown/MDX content
+  providerEventId String?       @unique
+  published       Boolean       @default(false)
+  publishedAt     DateTime?
+  authorId        String
+  author          User          @relation(fields: [authorId], references: [id])
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  tags            BlogPostTag[]
 }
 
 model Project {

@@ -122,7 +122,7 @@ export class ContentResolver {
         title: input.title,
         excerpt: input.excerpt,
         content: input.content,
-        coverImage: input.coverImage,
+        // coverImage removed from schema; ignore if present
         published: input.published ?? false,
         publishedAt: input.published ? new Date() : null,
         author: { connect: { id: (await this.ensureAuthor()).id } },
@@ -143,7 +143,7 @@ export class ContentResolver {
         title: input.title ?? undefined,
         excerpt: input.excerpt ?? undefined,
         content: input.content ?? undefined,
-        coverImage: input.coverImage ?? undefined,
+        // coverImage removed from schema; ignore if present
         published: input.published ?? existing.published,
         publishedAt:
           input.published === undefined

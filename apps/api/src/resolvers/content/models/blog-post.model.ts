@@ -8,7 +8,6 @@ export class BlogPostModel {
   @Field() title!: string;
   @Field(() => String, { nullable: true }) excerpt?: string | null;
   @Field() content!: string;
-  @Field(() => String, { nullable: true }) coverImage?: string | null;
   @Field() published!: boolean;
   @Field(() => Date, { nullable: true }) publishedAt?: Date | null;
   @Field(() => Date) createdAt!: Date;
