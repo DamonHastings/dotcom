@@ -16,7 +16,8 @@ export function useContactForm() {
     if (name && name.length < 2) newErrors.name = 'Name must be at least 2 characters';
     if (!email) newErrors.email = 'Email is required';
     else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) newErrors.email = 'Invalid email address';
-    if (!message || message.trim().length < 10) newErrors.message = 'Message must be at least 10 characters';
+    if (!message || message.trim().length < 10)
+      newErrors.message = 'Message must be at least 10 characters';
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   }
@@ -32,7 +33,9 @@ export function useContactForm() {
 
     const mutation = `mutation SubmitLead($input: SubmitLeadInput!) { submitLead(input: $input) { id email name createdAt } }`;
     try {
-      const data = await gqlRequest<{ submitLead: { id: string } }>(mutation, { input: { name, email, message } });
+      const data = await gqlRequest<{ submitLead: { id: string } }>(mutation, {
+        input: { name, email, message },
+      });
       if (data?.submitLead?.id) {
         setStatus('success');
         setName('');

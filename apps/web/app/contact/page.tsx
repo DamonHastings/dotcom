@@ -27,18 +27,28 @@ export default function ContactPage() {
 
         <div>
           <label className="block text-sm font-medium">Email</label>
-          <Input value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@example.com" />
+          <Input
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="you@example.com"
+          />
           {errors.email && <p className="text-red-600 text-sm mt-1">{errors.email}</p>}
         </div>
 
         <div>
           <label className="block text-sm font-medium">Message</label>
-          <Textarea value={message} onChange={(e) => setMessage(e.target.value)} placeholder="How can we help?" />
+          <Textarea
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            placeholder="How can we help?"
+          />
           {errors.message && <p className="text-red-600 text-sm mt-1">{errors.message}</p>}
         </div>
 
         <div>
-          <Button onClick={submit} disabled={status === 'sending'}>Send</Button>
+          <Button onClick={submit} disabled={status === 'sending'}>
+            Send
+          </Button>
         </div>
 
         {status === 'success' && (

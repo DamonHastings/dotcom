@@ -5,7 +5,13 @@ export interface TextareaProps extends React.TextareaHTMLAttributes<HTMLTextArea
   className?: string;
 }
 
-export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(({ className, ...props }, ref) => (
-  <textarea ref={ref} {...props} className={clsx('mt-1 block w-full border rounded px-3 py-2', className)} />
-));
+export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
+  ({ className, ...props }, ref) => (
+    <textarea
+      ref={ref}
+      {...props}
+      className={clsx('mt-1 block w-full border rounded px-3 py-2', className)}
+    />
+  ),
+);
 Textarea.displayName = 'Textarea';

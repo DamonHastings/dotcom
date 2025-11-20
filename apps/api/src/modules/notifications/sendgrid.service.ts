@@ -22,7 +22,10 @@ export class SendGridService {
     this.enabled = !!apiKey && !!this.sgMail;
 
     if (!apiKey) this.logger.log('SendGrid API key not found, notifications disabled');
-    if (!this.sgMail) this.logger.log("@sendgrid/mail not installed; notifications disabled (run 'npm --workspace @apps/api install @sendgrid/mail')");
+    if (!this.sgMail)
+      this.logger.log(
+        "@sendgrid/mail not installed; notifications disabled (run 'npm --workspace @apps/api install @sendgrid/mail')",
+      );
 
     if (this.enabled) {
       try {

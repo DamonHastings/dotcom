@@ -11,6 +11,7 @@ import {
 import { ContentResolver } from '../resolvers/content/content.resolver';
 import { ContactResolver } from '../resolvers/contact/contact.resolver';
 import { BookingResolver } from '../resolvers/booking/booking.resolver';
+import { LeadResolver } from '../resolvers/lead/lead.resolver';
 import { AuthModule } from './auth/auth.module';
 import { PrismaModule } from '../prisma/prisma.module';
 
@@ -43,6 +44,7 @@ import { WebhookModule } from './webhook/webhook.module';
     ContentResolver,
     ContactResolver,
     BookingResolver,
+    LeadResolver,
   ],
 })
 export class AppModule {}
