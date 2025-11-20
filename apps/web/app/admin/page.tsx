@@ -1,6 +1,23 @@
-import React from 'react';
 import { gqlRequest } from '../../lib/graphql-client';
 import AdminLeadsClient from '../../src/components/AdminLeadsClient';
+import React from 'react';
+
+type Booking = {
+  id: string;
+  startAt: string;
+  endAt?: string | null;
+  status: string;
+  provider?: string | null;
+};
+
+type Lead = {
+  id: string;
+  name: string;
+  email: string;
+  message?: string | null;
+  createdAt: string;
+  bookings: Booking[];
+};
 
 const ADMIN_LEADS_QUERY = `
   query AdminLeads {
@@ -25,8 +42,8 @@ export default async function AdminPage() {
   const headers: Record<string, string> = {};
   // Pass server-side admin secret from environment when rendering on server
   if (process.env.ADMIN_PASSWORD) headers['x-admin-secret'] = process.env.ADMIN_PASSWORD;
-  const data = await gqlRequest<{ adminLeads: any[] }>(ADMIN_LEADS_QUERY, undefined, { headers });
-  const leads = data?.adminLeads || [];
+  const data = await gqlRequest<{ adminLeads: Lead[] }>(ADMIN_LEADS_QUERY, undefined, { headers });
+  const leads: Lead[] = data?.adminLeads || [];
 
   return (
     <div style={{ padding: 24 }}>
